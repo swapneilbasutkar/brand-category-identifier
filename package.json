@@ -1,0 +1,38 @@
+{
+  "name": "brand-category-identifier",
+  "version": "1.0.0",
+  "description": "A lightweight NPM library to identify brand categories using exact matching and Naive Bayes classification.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "brand",
+    "category",
+    "classifier",
+    "nlp",
+    "machine-learning",
+    "natural"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/natural": "^5.1.5",
+    "@types/node": "^20.11.24",
+    "jest": "^29.7.0",
+    "natural": "^6.10.4",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "natural": "^6.10.4"
+  }
+}
