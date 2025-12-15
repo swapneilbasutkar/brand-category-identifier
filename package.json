@@ -21,7 +21,7 @@
     "natural"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/natural": "^5.1.5",
