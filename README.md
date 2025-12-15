@@ -43,4 +43,4 @@ console.log(categorizer.getCategory("TechSoft")); // Output: "Technology" (Predi
 
 ## License
 
-ISC
+MIT
