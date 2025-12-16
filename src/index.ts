@@ -1,5 +1,12 @@
 import { BrandClassifier } from "./classifier";
+import {
+  AIBrandClassifier,
+  BrandClassificationResult,
+  VALID_CATEGORIES,
+} from "./ai-classifier";
+import { normalizeBrandName } from "./utils/normalizer";
 
+// Export the original deterministic classifier
 export class BrandCategorizer {
   private classifier: BrandClassifier;
 
@@ -28,5 +35,14 @@ export class BrandCategorizer {
     return this.classifier.getClassifications(brandName);
   }
 }
+
+// Export the new AI-powered components
+export {
+  AIBrandClassifier,
+  BrandClassificationResult,
+  VALID_CATEGORIES,
+  BrandIdentifierConfig,
+} from "./ai-classifier";
+export { normalizeBrandName } from "./utils/normalizer";
 
 export default BrandCategorizer;

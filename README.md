@@ -1,6 +1,12 @@
 # Brand Category Identifier
 
-A lightweight, zero-dependency (runtime) Node.js library to identify the category of a brand based on its name. It uses a hybrid approach of exact matching and a Naive Bayes classifier (via `natural`) for accurate and robust predictions.
+A robust Node.js library to identify brand categories using AI (LangChain + OpenAI + Tavily) with a fallback to a fast Naive Bayes classifier.
+
+## Features
+
+- **AI-Powered Identification**: Uses OpenAI (GPT-4) and Tavily Search to classify any brand with high accuracy and real-time data.
+- **Deterministic Pre-processing**: Normalizes brand names to handle variations.
+- **Strict Taxonomy**: Classifies into a standardized set of categories (Technology, Automotive, Fashion, etc.).
 
 ## Installation
 
@@ -10,36 +16,56 @@ npm install brand-category-identifier
 
 ## Usage
 
+### AI Classification (Recommended)
+
+Requires `OPENAI_API_KEY` and `TAVILY_API_KEY`.
+
 ```typescript
-import { BrandCategorizer } from "brand-category-identifier";
+import { AIBrandClassifier } from "brand-category-identifier";
 
-const categorizer = new BrandCategorizer();
+const classifier = new AIBrandClassifier({
+  openAIApiKey: "sk-...",
+  tavilyApiKey: "tvly-...",
+});
 
-// Exact match examples
-console.log(categorizer.getCategory("Apple")); // Output: "Technology"
-console.log(categorizer.getCategory("Toyota")); // Output: "Automotive"
+async function main() {
+  // Simple usage: Get just the category name
+  const category = await classifier.identify("Nvidia");
+  console.log(category); // "Technology"
 
-// Case insensitive
-console.log(categorizer.getCategory("nike")); // Output: "Fashion"
+  // Detailed usage: Get category, subcategory, confidence, and source URLs
+  const result = await classifier.classify("Impossible Foods");
+  console.log(result);
+  /*
+  {
+    category: "Food & Beverage",
+    subcategory: "Plant-based Meat Alternatives",
+    confidence: "High",
+    evidence_sources: ["https://en.wikipedia.org/...", ...]
+  }
+  */
+}
 
-// ML-based prediction for unknown brands (heuristics)
-console.log(categorizer.getCategory("TechSoft")); // Output: "Technology" (Predicted)
+main();
 ```
 
-## Features
+### Deterministic/Offline Classification (Legacy)
 
-- **Hybrid Classification**: Uses a dictionary of common brands for 100% accuracy on known entities, and a Naive Bayes classifier for unknown inputs.
-- **Zero External API Dependencies**: Runs entirely locally. No OpenAI/Gemini keys required.
-- **Lightweight**: Fast to regular expressions and simple probability calculations.
-- **TypeScript Support**: Written in TypeScript with full type definitions included.
+For internal datasets or offline usage (limited to pre-trained brands).
 
-## Supported Categories (Initial Dataset)
+```typescript
+import BrandCategorizer from "brand-category-identifier";
 
-- Technology
-- Automotive
-- Fashion
-- Food & Beverage
-- Retail
+const localClassifier = new BrandCategorizer();
+const category = localClassifier.getCategory("Apple"); // "Technology"
+```
+
+## Configuration
+
+The `AIBrandClassifier` requires two API keys:
+
+1.  **openAIApiKey**: For the LLM (GPT-4o recommend).
+2.  **tavilyApiKey**: For web search to gather context.
 
 ## License
 

@@ -18,7 +18,11 @@
     "classifier",
     "nlp",
     "machine-learning",
-    "natural"
+    "natural",
+    "ai",
+    "openai",
+    "langchain",
+    "tavily"
   ],
   "author": "",
   "license": "MIT",
@@ -33,6 +37,11 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "natural": "^6.10.4"
+    "@langchain/openai": "^1.2.0",
+    "@tavily/core": "^0.6.1",
+    "dotenv": "^17.2.3",
+    "langchain": "^1.2.0",
+    "natural": "^6.10.4",
+    "zod": "^4.2.1"
   }
 }
