@@ -67,6 +67,8 @@ The `AIBrandClassifier` requires two API keys:
 1.  **openAIApiKey**: For the LLM (GPT-4o recommend).
 2.  **tavilyApiKey**: For web search to gather context.
 
+NPM Package: https://www.npmjs.com/package/brand-category-identifier
+
 ## License
 
 MIT
