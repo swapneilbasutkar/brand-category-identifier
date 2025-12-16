@@ -1,6 +1,6 @@
 {
   "name": "brand-category-identifier",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A lightweight NPM library to identify brand categories using exact matching and Naive Bayes classification.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
