@@ -81,4 +81,34 @@ export const brands: BrandData[] = [
   { name: "IKEA", category: "Retail" },
   { name: "Home Depot", category: "Retail" },
   { name: "Lowe's", category: "Retail" },
+
+  // Healthcare
+  { name: "Johnson & Johnson", category: "Healthcare" },
+  { name: "Pfizer", category: "Healthcare" },
+  { name: "Novartis", category: "Healthcare" },
+  { name: "Roche", category: "Healthcare" },
+  { name: "Merck", category: "Healthcare" },
+  { name: "Abbott", category: "Healthcare" },
+  { name: "Medtronic", category: "Healthcare" },
+  { name: "UnitedHealth", category: "Healthcare" },
+
+  // Finance
+  { name: "Visa", category: "Finance" },
+  { name: "Mastercard", category: "Finance" },
+  { name: "JPMorgan Chase", category: "Finance" },
+  { name: "Goldman Sachs", category: "Finance" },
+  { name: "American Express", category: "Finance" },
+  { name: "PayPal", category: "Finance" },
+  { name: "BlackRock", category: "Finance" },
+  { name: "Morgan Stanley", category: "Finance" },
+
+  // Entertainment
+  { name: "Netflix", category: "Entertainment" },
+  { name: "Disney", category: "Entertainment" },
+  { name: "Warner Bros", category: "Entertainment" },
+  { name: "Spotify", category: "Entertainment" },
+  { name: "Universal Music", category: "Entertainment" },
+  { name: "HBO", category: "Entertainment" },
+  { name: "Paramount", category: "Entertainment" },
+  { name: "EA Sports", category: "Entertainment" },
 ];

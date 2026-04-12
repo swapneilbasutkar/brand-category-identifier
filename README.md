@@ -4,7 +4,7 @@ A robust Node.js library to identify brand categories using AI (LangChain + Open
 
 ## Features
 
-- **AI-Powered Identification**: Uses OpenAI (GPT-4) and Tavily Search to classify any brand with high accuracy and real-time data.
+- **AI-Powered Identification**: Uses OpenAI (GPT-4o) and Tavily Search to classify any brand with high accuracy and real-time data.
 - **Deterministic Pre-processing**: Normalizes brand names to handle variations.
 - **Strict Taxonomy**: Classifies into a standardized set of categories (Technology, Automotive, Fashion, etc.).
 
@@ -64,7 +64,7 @@ const category = localClassifier.getCategory("Apple"); // "Technology"
 
 The `AIBrandClassifier` requires two API keys:
 
-1.  **openAIApiKey**: For the LLM (GPT-4o recommend).
+1.  **openAIApiKey**: For the LLM (GPT-4o recommended).
 2.  **tavilyApiKey**: For web search to gather context.
 
 NPM Package: https://www.npmjs.com/package/brand-category-identifier
