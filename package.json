@@ -42,5 +42,13 @@
     "langchain": "^1.2.0",
     "natural": "^6.10.4",
     "zod": "^4.2.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/swapneilbasutkar/brand-category-identifier.git"
+  },
+  "bugs": {
+    "url": "https://github.com/swapneilbasutkar/brand-category-identifier/issues"
+  },
+  "homepage": "https://github.com/swapneilbasutkar/brand-category-identifier#readme"
 }
