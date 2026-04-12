@@ -11,38 +11,28 @@ export function normalizeBrandName(name: string): string {
   // Remove content in parentheses (often ticker symbols or extra info)
   normalized = normalized.replace(/\s*\(.*?\)\s*/g, "");
 
-  // Remove common suffixes
+  // Remove common corporate suffixes (without trailing dots — the regex handles optional dots)
   const suffixes = [
-    " inc",
-    " inc.",
-    " incorporated",
-    " ltd",
-    " ltd.",
-    " limited",
-    " llc",
-    " llc.",
-    " corp",
-    " corp.",
-    " corporation",
-    " co",
-    " co.",
-    " company",
-    " plc",
-    " plc.",
-    " gmbh",
-    " sa",
-    " s.a.",
-    " pvt",
-    " pvt.",
-    " nv",
-    " n.v.",
-    " ag",
+    "incorporated",
+    "corporation",
+    "company",
+    "limited",
+    "gmbh",
+    "pvt",
+    "corp",
+    "inc",
+    "ltd",
+    "llc",
+    "plc",
+    "co",
+    "sa",
+    "nv",
+    "ag",
   ];
 
-  // We want to verify it ends with one of these, so we use a regex
-  // Create a regex like: /\s+(inc|ltd|llc)\.?$/
+  // Match a whitespace-separated suffix at the end, with an optional trailing dot
   const suffixPattern = new RegExp(
-    `\\s+(${suffixes.map((s) => s.trim().replace(".", "\\.")).join("|")})\\.?$`,
+    `\\s+(${suffixes.join("|")})\\.?$`,
     "i"
   );
 

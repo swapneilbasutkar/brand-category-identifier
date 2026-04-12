@@ -1,5 +1,6 @@
 import { BayesClassifier } from "natural";
 import { brands, BrandData } from "./data/brands";
+import { normalizeBrandName } from "./utils/normalizer";
 
 export class BrandClassifier {
   private classifier: BayesClassifier;
@@ -24,21 +25,22 @@ export class BrandClassifier {
     if (!this.isTrained) {
       this.train();
     }
+    const normalized = normalizeBrandName(brandName);
     // Simple exact match check first for 100% accuracy on known data
     const exactMatch = brands.find(
-      (b) => b.name.toLowerCase() === brandName.toLowerCase()
+      (b) => normalizeBrandName(b.name) === normalized
     );
     if (exactMatch) {
       return exactMatch.category;
     }
 
-    return this.classifier.classify(brandName);
+    return this.classifier.classify(normalized);
   }
 
   public getClassifications(brandName: string) {
     if (!this.isTrained) {
       this.train();
     }
-    return this.classifier.getClassifications(brandName);
+    return this.classifier.getClassifications(normalizeBrandName(brandName));
   }
 }

@@ -1,7 +1,8 @@
 import { ChatOpenAI } from "@langchain/openai";
-import { tavily } from "@tavily/core";
+import { tavily, TavilyClient } from "@tavily/core";
 import { z } from "zod";
 import { normalizeBrandName } from "./utils/normalizer";
+import { BrandClassifier } from "./classifier";
 
 // Define the valid categories based on our taxonomy
 // We can extend this list as needed.
@@ -11,9 +12,9 @@ export const VALID_CATEGORIES = [
   "Fashion",
   "Food & Beverage",
   "Retail",
-  "Healthcare", // Added for breadth
-  "Finance", // Added for breadth
-  "Entertainment", // Added for breadth
+  "Healthcare",
+  "Finance",
+  "Entertainment",
   "Other",
 ] as const;
 
@@ -47,8 +48,9 @@ export interface BrandIdentifierConfig {
 
 export class AIBrandClassifier {
   private llm: ChatOpenAI;
-  private tavilyClient: any;
+  private tavilyClient: TavilyClient;
   private cache: Map<string, BrandClassificationResult>;
+  private fallbackClassifier: BrandClassifier;
 
   constructor(config: BrandIdentifierConfig) {
     if (!config.openAIApiKey || !config.tavilyApiKey) {
@@ -66,6 +68,8 @@ export class AIBrandClassifier {
     });
 
     this.cache = new Map();
+    this.fallbackClassifier = new BrandClassifier();
+    this.fallbackClassifier.train();
   }
 
   /**
@@ -78,7 +82,8 @@ export class AIBrandClassifier {
   }
 
   /**
-   * Main method to classify a brand
+   * Main method to classify a brand. Falls back to the deterministic classifier
+   * if the LLM call fails.
    */
   async classify(inputName: string): Promise<BrandClassificationResult> {
     // Step 1: Normalize
@@ -116,48 +121,64 @@ export class AIBrandClassifier {
         }
       );
 
-      sources = searchResult.results.map((r: any) => r.url);
+      sources = searchResult.results.map((r) => r.url);
       searchContext = searchResult.results
         .map(
-          (r: any) => `Title: ${r.title}\nContent: ${r.content}\nURL: ${r.url}`
+          (r) => `Title: ${r.title}\nContent: ${r.content}\nURL: ${r.url}`
         )
         .join("\n\n");
     } catch (error) {
       console.error("Search failed:", error);
-      // Fallback or handle error. For now, continue with empty context (LLM might know major brands without search)
       searchContext =
         "No external search context available. Rely on internal knowledge.";
     }
 
-    // Step 4: Classify with LLM
-    const structuredLlm = this.llm.withStructuredOutput(ClassificationSchema);
+    // Step 4: Classify with LLM, fall back to deterministic classifier on failure
+    try {
+      const structuredLlm = this.llm.withStructuredOutput(ClassificationSchema);
 
-    const prompt = `
+      const prompt = `
     You are an expert industry analyst.
     Your task is to identify the brand category for the brand: "${inputName}".
-    
+
     Use the following search context as evidence:
     ---
     ${searchContext}
     ---
-    
+
     Allowed Categories: ${VALID_CATEGORIES.join(", ")}
-    
+
     If the brand is ambiguous or unknown, set confidence to "Low" and category to "Other".
     `;
 
-    const result = await structuredLlm.invoke(prompt);
+      const result = await structuredLlm.invoke(prompt);
 
-    const finalResult: BrandClassificationResult = {
-      ...result,
-      evidence_sources: sources,
-    };
+      const finalResult: BrandClassificationResult = {
+        ...result,
+        evidence_sources: sources,
+      };
 
-    // Step 5: Validate and Cache
-    // We only cache if confidence is Medium or High to avoid poisoning cache with bad data?
-    // Or cache everything to save costs. Let's cache everything for now.
-    this.cache.set(normalizedName, finalResult);
+      this.cache.set(normalizedName, finalResult);
+      return finalResult;
+    } catch (llmError) {
+      console.error(
+        "[LLM Fallback] LLM classification failed, falling back to deterministic classifier:",
+        llmError
+      );
 
-    return finalResult;
+      const fallbackCategory = this.fallbackClassifier.classify(normalizedName);
+      const fallbackResult: BrandClassificationResult = {
+        category: (VALID_CATEGORIES.includes(fallbackCategory as typeof VALID_CATEGORIES[number])
+          ? fallbackCategory
+          : "Other") as typeof VALID_CATEGORIES[number],
+        subcategory: null,
+        confidence: "Low",
+        reasoning: "LLM unavailable; result from deterministic fallback classifier.",
+        evidence_sources: [],
+      };
+
+      this.cache.set(normalizedName, fallbackResult);
+      return fallbackResult;
+    }
   }
 }
